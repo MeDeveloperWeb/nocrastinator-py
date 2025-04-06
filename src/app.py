@@ -570,8 +570,7 @@ class ProductivityTrackerApp:
         # Update current activity
         app_name, window_title = self.activity_tracker.get_active_window_info()
         if app_name:
-            self.activity_label.configure(text=app_name)
-            
+            self.activity_label.configure(text= f"{app_name} - {window_title}")
             is_productive = self.activity_tracker.is_productive(app_name, window_title)
             if is_productive is True:
                 self.activity_type_label.configure(text="(Productive)", foreground="green")

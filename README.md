@@ -1,38 +1,30 @@
 # Productivity Tracker
 
-A Python application that helps you track and improve your productivity by monitoring app usage, providing a Pomodoro timer, and generating personalized insights.
+## Overview
+The Productivity Tracker is a Python application designed to help users monitor and improve their productivity. It tracks application and website usage, categorizes tasks as productive or unproductive, and provides insights and alerts to encourage better habits.
 
 ## Features
+- **Activity Tracking**: Monitors app and website usage, logging time spent on each.
+- **Productivity Alerts**: Sends notifications when unproductive time exceeds a threshold.
+- **Pomodoro Timer**: Implements the Pomodoro technique to boost focus.
+- **Focus Score**: Calculates a daily productivity score based on usage patterns.
+- **Data Analysis**: Provides insights into usage patterns and productivity trends.
 
-- **Activity Tracking**: Automatically monitors which applications and websites you're using
-- **Pomodoro Timer**: Integrated timer with work and break sessions to improve focus
-- **Productivity Alerts**: Notifies you when you've spent too much time on unproductive apps
-- **Focus Score**: Daily productivity score based on your app usage
-- **Analytics Dashboard**: Visual breakdown of your productivity trends
-- **Personalized Suggestions**: Recommendations to improve your work habits
+## Setup Instructions
+1. **Install Dependencies**: Ensure you have Python installed, then run `pip install -r requirements.txt` to install necessary packages.
+2. **Configure Settings**: Edit `config.py` to customize app categorization and thresholds.
+3. **Run the Application**: Execute `python src/app.py` to start the application.
 
-## Installation
+## Usage
+- **Dashboard**: View current activity, focus score, and Pomodoro timer.
+- **Analysis**: Review weekly productivity trends and app usage statistics.
+- **Settings**: Adjust app categorization and Pomodoro settings.
 
-1. Clone this repository
-2. Create a virtual Environment
-   ```
-   # For Windows
-   python -m venv venv
-   venv\Scripts\activate
-   
-   # For macOS/Linux
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+## Contributing
+Feel free to fork the repository and submit pull requests for improvements or bug fixes.
 
-3. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-4. Run the application:
-   ```
-   python src/main.py
-   ```
+## License
+This project is licensed under the MIT License.
 
 ## Configuration
 
@@ -42,23 +34,6 @@ You can customize the application by editing the `src/config.py` file:
 - Adjust time thresholds for alerts
 - Modify Pomodoro timer durations
 - Customize focus score calculations
-
-## Usage
-
-### Dashboard Tab
-- View your current focus score and activity
-- Use the Pomodoro timer to manage work sessions
-- Receive alerts when spending too much time on distracting apps
-
-### Analysis Tab
-- See your weekly productivity overview
-- Review statistics about app usage
-- Get personalized suggestions for improvement
-
-### Settings Tab
-- View current app categorizations
-- See Pomodoro timer settings
-- Reset application data if needed
 
 ## Data Storage
 

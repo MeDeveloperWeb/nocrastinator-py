@@ -12,6 +12,7 @@ from datetime import datetime
 from plyer import notification
 import threading
 import config
+import re
 
 class ActivityTracker:
     """
@@ -43,6 +44,9 @@ class ActivityTracker:
         self.tracking_thread = None
         self.is_tracking = False
         
+        # Browser process names
+        self.browsers = ["chrome.exe", "msedge.exe", "firefox.exe", "opera.exe", "brave.exe", "safari.exe"]
+        
         print("Activity tracker initialized")
     
     def init_activity_log(self):
@@ -71,6 +75,65 @@ class ActivityTracker:
             print(f"Error getting active window: {e}")
             return None, None
     
+    def extract_website_from_title(self, app_name, window_title):
+        """
+        Extract website information from browser window titles
+        Returns the extracted website domain or None if not found
+        """
+        if not window_title or app_name not in self.browsers:
+            return None
+            
+        # Common title patterns in browsers:
+        # 1. "Page Title - Website - Browser"
+        # 2. "Website - Page Title"
+        # 3. "Page Title | Website"
+        # 4. "Page Title - Website"
+        
+        # Try to extract using common patterns
+        patterns = [
+            r'(?:https?://)?(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)',  # Extract domain from URL
+            r'(?:.*?)(?:[-|]\s*)((?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)(?:\s*[-|])',  # Middle of the title
+            r'(?:.*?)(?:[-|]\s*)((?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)(?:\s*)$',  # End of the title
+        ]
+        
+        window_title_lower = window_title.lower()
+        
+        # Check for specific website names (more reliable than regex for some sites)
+        known_sites = {
+            'facebook': 'facebook.com',
+            'twitter': 'twitter.com',
+            'x.com': 'twitter.com',
+            'instagram': 'instagram.com',
+            'reddit': 'reddit.com',
+            'youtube': 'youtube.com',
+            'netflix': 'netflix.com',
+            'tiktok': 'tiktok.com',
+            'twitch': 'twitch.tv',
+            'github': 'github.com',
+            'stackoverflow': 'stackoverflow.com',
+            'stack overflow': 'stackoverflow.com',
+            'linkedin': 'linkedin.com',
+            'udemy': 'udemy.com',
+            'coursera': 'coursera.org',
+            'edx': 'edx.org',
+            'kaggle': 'kaggle.com'
+        }
+        
+        for site, domain in known_sites.items():
+            if site in window_title_lower:
+                print(f"Website detected: {domain} (from title: {window_title})")
+                return domain
+                
+        # Try regex patterns if no known site found
+        for pattern in patterns:
+            match = re.search(pattern, window_title)
+            if match:
+                domain = match.group(1)
+                print(f"Website detected: {domain} (from title: {window_title})")
+                return domain
+                
+        return None
+    
     def is_productive(self, app_name, window_title):
         """
         Determine if an app or website is productive.
@@ -82,13 +145,33 @@ class ActivityTracker:
         """
         app_name = app_name.lower()
         
+        # First check if app is a browser
+        if app_name in self.browsers:
+            # Extract website from browser window title
+            website = self.extract_website_from_title(app_name, window_title)
+            
+            if website:
+                # Check if website is in productive or unproductive lists
+                for prod_site in config.PRODUCTIVE_WEBSITES:
+                    if prod_site in website:
+                        print(f"Productive website detected: {website}")
+                        return True
+                
+                for unprod_site in config.UNPRODUCTIVE_WEBSITES:
+                    if unprod_site in website:
+                        print(f"Unproductive website detected: {website}")
+                        return False
+                        
+                # If website is found but not categorized, log it for future categorization
+                print(f"Uncategorized website detected: {website}")
+        
         # Check if app is in productive or unproductive lists
         if app_name in (app.lower() for app in config.PRODUCTIVE_APPS):
             return True
         elif app_name in (app.lower() for app in config.UNPRODUCTIVE_APPS):
             return False
         
-        # Check website in window title
+        # If not determined yet, check window title for website names
         window_title = window_title.lower()
         for website in config.PRODUCTIVE_WEBSITES:
             if website in window_title:
