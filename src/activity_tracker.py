@@ -85,8 +85,8 @@ class ActivityTracker:
         # Check if app is in productive or unproductive lists
         if app_name in (app.lower() for app in config.PRODUCTIVE_APPS):
             return True
-        # elif app_name in (app.lower() for app in config.UNPRODUCTIVE_APPS):
-        #     return False
+        elif app_name in (app.lower() for app in config.UNPRODUCTIVE_APPS):
+            return False
         
         # Check website in window title
         window_title = window_title.lower()
@@ -94,12 +94,12 @@ class ActivityTracker:
             if website in window_title:
                 return True
         
-        # for website in config.UNPRODUCTIVE_WEBSITES:
-        #     if website in window_title:
-        #         return False
+        for website in config.UNPRODUCTIVE_WEBSITES:
+            if website in window_title:
+                return False
         
-        # Default to false
-        return False
+        # Default to neutral
+        return None
     
     def start_tracking(self):
         """Start tracking user activity in a separate thread"""
