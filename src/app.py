@@ -127,7 +127,7 @@ class ProductivityTrackerApp:
         timer_display_frame = ttk.Frame(pomodoro_frame)
         timer_display_frame.pack(pady=10)
         
-        self.timer_label = ttk.Label(timer_display_frame, text="25:00", style="Timer.TLabel")
+        self.timer_label = ttk.Label(timer_display_frame, text=f"{config.POMODORO_WORK_DURATION}:00", style="Timer.TLabel")
         self.timer_label.pack()
         
         self.phase_label = ttk.Label(timer_display_frame, text="Ready", style="Phase.TLabel")
